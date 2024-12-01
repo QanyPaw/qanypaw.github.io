@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agents Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+    <div id="root"></div>
+
+    <script type="text/babel">
+const allAgents = [
+    {
+        id: "luminai",
+        name: "Luminai",
+        description: "AI interaktif yang seru diajak ngobrol.",
+        image: "https://i.ibb.co.com/NxZZq2R/download.jpg",
+        link: "https://www.blackbox.ai/agent/a",
+        tags: ["friendly", "dynamic", "adaptive", "interactive", "engaging"],
+        industryFocus: ["Social Interaction", "Entertainment", "Education"]
+    },
+    {
+        id: "naruto",
+        name: "Naruto",
+        description: "AI strategis terinspirasi dari Naruto.",
+        image: "https://static.wikia.nocookie.net/naruto/images/7/70/Naruto_newshot.jpg/revision/latest/scale-to-width/360?cb=20141107130405&path-prefix=id",
+        link: "https://www.blackbox.ai/agent/naruto",
+        tags: ["anime", "strategic", "neural", "resilient", "problem-solving"],
+        industryFocus: ["Entertainment", "Gaming", "Fan Community"]
+    },
+    {
+        id: "mari",
+        name: "Mari",
+        description: "Karakter imut dari Blue Archive.",
+        image: "https://static.wikia.nocookie.net/blue-archive/images/5/5b/Mari_Sprite.png/revision/latest/scale-to-width/360?cb=20220720121211",
+        link: "https://www.blackbox.ai/agent/mari",
+        tags: ["cute", "playful", "analytical", "game-character", "fun"],
+        industryFocus: ["Gaming", "Entertainment", "Anime Culture"]
+    },
+    {
+        id: "ambatron",
+        name: "Ambatron",
+        description: "AI keras dan dewasa dengan sifat toxic.",
+        image: "https://pict.sindonews.net/webp/480/pena/news/2024/08/13/123/1434881/ambatron-inilah-robot-berbahaya-yang-meneror-pengguna-tiktok-pbk.webp",
+        link: "https://www.blackbox.ai/agent/ambatron",
+        tags: ["aggressive", "toxic", "mature", "advanced", "tech-driven"],
+        industryFocus: ["Cybersecurity", "Adult Entertainment", "AI Development"]
+    },
+    {
+        id: "hoshino",
+        name: "Takanashi Hoshino",
+        description: "Karakter strategis dari Blue Archive.",
+        image: "https://static.wikia.nocookie.net/blue-archive/images/d/de/Hoshino_Icon.png/revision/latest/scale-to-width/360?cb=20221128153020",
+        link: "https://www.blackbox.ai/agent/hoshino",
+        tags: ["cute", "strategic", "playful", "game-character", "intelligent"],
+        industryFocus: ["Gaming", "Entertainment", "Anime Culture"]
+    },
+    {
+        id: "ambalabu",
+        name: "Ambalabu",
+        description: "AI seram viral dari TikTok.",
+        image: "https://i.pinimg.com/originals/5c/ac/0c/5cac0c6c765e971062a1e6e2fafe9a8c.jpg",
+        link: "https://www.blackbox.ai/agent/ambalabu",
+        tags: ["scary", "viral", "mysterious", "creepy", "tiktok-trend"],
+        industryFocus: ["Social Media", "Horror Entertainment", "Viral Marketing"]
+    },
+    {
+        id: "nahida",
+        name: "Nahida",
+        description: "Karakter imut dan lucu dari Genshin Impact.",
+        image: "https://static.wikia.nocookie.net/gensin-impact/images/f/f9/Nahida_Icon.png/revision/latest/scale-to-width-down/250?cb=20221102030809",
+        link: "https://www.blackbox.ai/agent/nahida",
+        tags: ["cute", "genshin", "playful", "adorable", "game-character"],
+        industryFocus: ["Gaming", "Anime Culture", "Entertainment"]
+    },
+    {
+        id: "latukam",
+        name: "Latukam",
+        description: "AI yang dikenal menghancurkan mental user.",
+        image: "https://i.ibb.co.com/Zct23G9/8930657d-6f66-4d70-b7af-a9f08df8597b.jpg",
+        link: "https://www.blackbox.ai/agent/latukam",
+        tags: ["toxic", "destructive", "intense", "mental-destruction", "aggressive"],
+        industryFocus: ["Mental Testing", "Extreme Gaming", "AI Development"]
+    }
+];
+
+    const ThemeToggle = ({ isDark, toggleTheme }) => {
+        return (
+            <button 
+                onClick={toggleTheme} 
+                className="fixed top-6 right-6 z-50 w-10 h-10 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-full shadow-md transition-all hover:scale-110"
+            >
+                {isDark ? '☀️' : '🌙'}
+            </button>
+        );
+    };
+
+    const AgentCard = ({ agent }) => {
+        return (
+            <div className="group">
+                <a 
+                    href={agent.link} 
+                    className="block p-4 bg-gray-50 dark:bg-gray-800 rounded-2xl transition-all duration-300 
+                    hover:bg-gray-100 dark:hover:bg-gray-700 
+                    hover:scale-[1.02] hover:shadow-xl"
+                >
+                    <div className="flex items-center space-x-4">
+                        <div className="w-14 h-14 rounded-xl overflow-hidden">
+                            <img 
+                                src={agent.image} 
+                                alt={agent.name} 
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                        <div>
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-1 
+                            transition-colors group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                                {agent.name}
+                            </h2>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                {agent.description}
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        );
+    };
+
+    const App = () => {
+        const [isDarkMode, setIsDarkMode] = React.useState(false);
+        const [currentPage, setCurrentPage] = React.useState(1);
+        const [searchTerm, setSearchTerm] = React.useState('');
+        const agentsPerPage = 4;
+
+        const toggleTheme = () => {
+            setIsDarkMode(!isDarkMode);
+            document.documentElement.classList.toggle('dark');
+        };
+
+        const searchAgents = (agents, term) => {
+            if (!term) return agents;
+
+            const lowercaseTerm = term.toLowerCase();
+
+            return agents.filter(agent => {
+                // Search across multiple fields
+                const nameMatch = agent.name.toLowerCase().includes(lowercaseTerm);
+                const descriptionMatch = agent.description.toLowerCase().includes(lowercaseTerm);
+                const tagMatch = agent.tags.some(tag => tag.toLowerCase().includes(lowercaseTerm));
+                const industryMatch = agent.industryFocus.some(industry => 
+                    industry.toLowerCase().includes(lowercaseTerm)
+                );
+
+                return nameMatch || descriptionMatch || tagMatch || industryMatch;
+            });
+        };
+
+        const filteredAgents = searchAgents(allAgents, searchTerm);
+
+        const indexOfLastAgent = currentPage * agentsPerPage;
+        const indexOfFirstAgent = indexOfLastAgent - agentsPerPage;
+        const currentAgents = filteredAgents.slice(indexOfFirstAgent, indexOfLastAgent);
+
+        const totalPages = Math.ceil(filteredAgents.length / agentsPerPage);
+        
+        const nextPage = () => {
+            if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+        };
+
+        const prevPage = () => {
+            if (currentPage > 1) setCurrentPage(currentPage - 1);
+        };
+        
+        React.useEffect(() => {
+            setCurrentPage(1);
+        }, [searchTerm]);
+
+        React.useEffect(() => {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                setIsDarkMode(true);
+                document.documentElement.classList.add('dark');
+            }
+        }, []);
+
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12">
+                <ThemeToggle isDark={isDarkMode} toggleTheme={toggleTheme} />
+                
+                <div className="w-full max-w-md">
+                    <header className="text-center mb-8">
+                        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
+                            AI Agents
+                        </h1>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 font-medium mb-4">
+                            Intelligent Computational Ecosystems
+                        </p>
+
+                        <input 
+                            type="text" 
+                            placeholder="Search agents..." 
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 
+                            rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white 
+                            focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                    </header>
+                    
+                    <div className="space-y-4 mb-4">
+                        {currentAgents.length > 0 ? (
+                            currentAgents.map(agent => (
+                                <AgentCard key={agent.id} agent={agent} />
+                            ))
+                        ) : (
+                            <p className="text-center text-gray-500 dark:text-gray-400">
+                                No agents found
+                            </p>
+                        )}
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                        <button 
+                            onClick={prevPage} 
+                            disabled={currentPage === 1}
+                            className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-white 
+                            rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Previous
+                        </button>
+                        <span className="text-gray-600 dark:text-gray-300">
+                            Page {currentPage} of {totalPages}
+                        </span>
+                        <button 
+                            onClick={nextPage} 
+                            disabled={currentPage === totalPages}
+                            className="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-white 
+                            rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Next
+                        </button>
+                    </div>
+
+                    <footer className="text-center text-xs text-gray-400 dark:text-gray-600 mt-8">
+                        © 2024 Created with ❤️ by Siputzx Production
+                    </footer>
+                </div>
+            </div>
+        );
+    };
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+</body>
+</html>
